@@ -1,6 +1,6 @@
-import React from "react";
-import PlacesAutocomplete from "react-places-autocomplete";
-import { inject, observer } from "mobx-react";
+import React from 'react';
+import PlacesAutocomplete from 'react-places-autocomplete';
+// import { inject, observer } from 'mobx-react';
 import {
   Container, // Wrapper (div) for all the content in this component
   Logo, // The logo image (img)
@@ -10,8 +10,37 @@ import {
   NearbyCity, // List item (li) showing the nearby city
   NearbyLink, // Making the city clickable (a)
   autoComplete // some styles for the autocomplete component
-} from "../elements/home";
+} from '../elements/home';
 
-import logo from "../images/theclima.svg";
+import logo from '../images/theclima.svg';
 
-export default () => "Home";
+export default class Home extends React.Component {
+  state = {
+    searchValue: ''
+  };
+
+  render() {
+    return (
+      <Container>
+        <Logo src={logo} />
+        <Form>
+          <Label>Search City...</Label>
+          <PlacesAutocomplete
+            inputProps={{
+              value: this.state.searchValue,
+              onChange: newValue => {
+                this.setState({
+                  searchValue: newValue
+                });
+              }
+            }}
+            styles={autoComplete}
+            onSelect={selectedValue => {
+              this.props.history.push(`/${selectedValue}`);
+            }}
+          />
+        </Form>
+      </Container>
+    );
+  }
+}

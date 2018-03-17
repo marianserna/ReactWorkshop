@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Container = styled.section`
   width: 100vw;
@@ -55,37 +55,37 @@ const NearbyLink = styled(Link)`
 
 const autoComplete = {
   root: {
-    position: "relative",
-    paddingBottom: "0px",
-    boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)"
+    position: 'relative',
+    paddingBottom: '0px',
+    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)'
   },
   input: {
-    display: "inline-block",
-    width: "100%",
-    padding: "15px",
-    height: "50px",
-    border: "none",
-    outlineColor: "#ffff00",
-    fontFamily: "Barlow Condensed, sans-serif",
-    fontSize: "1.5rem",
-    color: "#866667"
+    display: 'inline-block',
+    width: '100%',
+    padding: '15px',
+    height: '50px',
+    border: 'none',
+    outlineColor: '#ffff00',
+    fontFamily: 'Barlow Condensed, sans-serif',
+    fontSize: '1.5rem',
+    color: '#866667'
   },
   autocompleteContainer: {
-    position: "absolute",
-    top: "100%",
-    backgroundColor: "white",
-    border: "1px solid #555555",
-    width: "100%"
+    position: 'absolute',
+    top: '100%',
+    backgroundColor: 'white',
+    border: '1px solid #555555',
+    width: '100%'
   },
   autocompleteItem: {
-    backgroundColor: "#fff",
-    padding: "10px",
-    color: "#555555",
-    cursor: "pointer"
+    backgroundColor: '#fff',
+    padding: '10px',
+    color: '#555555',
+    cursor: 'pointer'
   },
   autocompleteItemActive: {
-    color: "#fff",
-    backgroundColor: "#000"
+    color: '#fff',
+    backgroundColor: '#000'
   }
 };
 

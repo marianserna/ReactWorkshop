@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Motion, spring } from 'react-motion';
 
 import Nav from '../components/Nav';
 import Temperature from '../components/Temperature';
@@ -19,7 +20,8 @@ export default class City extends React.Component {
   state = {
     weather: null,
     time: new Date().toISOString(),
-    weatherError: false
+    weatherError: false,
+    showForecast: false
   };
 
   componentDidMount() {
@@ -69,13 +71,38 @@ export default class City extends React.Component {
           style={{ backgroundImage: `url('${weather.image_url}')` }}
         />
         <Nav city={weather.city} />
-        <Temperature temp={weather.current.temp} city={weather.city} />
+        <Temperature
+          temp={weather.current.temp}
+          city={weather.city}
+          toggleForecast={() => {
+            this.setState({
+              showForecast: !this.state.showForecast
+            });
+          }}
+        />
         <Time time={time} />
         <Today date={weather.current.date} />
 
-        <Forecast>
-          {weather.forecast.map(daily => <Daily {...daily} key={daily.date} />)}
-        </Forecast>
+        <Motion
+          defaultStyle={{ x: -200, opacity: 0 }}
+          style={{
+            x: spring(this.state.showForecast ? 0 : -200),
+            opacity: spring(this.state.showForecast ? 1 : 0)
+          }}
+        >
+          {style => (
+            <Forecast
+              style={{
+                transform: `translateX(${style.x}px)`,
+                opacity: style.opacity
+              }}
+            >
+              {weather.forecast.map(daily => (
+                <Daily {...daily} key={daily.date} />
+              ))}
+            </Forecast>
+          )}
+        </Motion>
       </CityContainer>
     );
   }

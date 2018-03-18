@@ -1,13 +1,31 @@
-import { observable, action } from "mobx";
-import axios from "axios";
+import { observable, action } from 'mobx';
+import axios from 'axios';
 
 class WeatherStore {
-  @observable time = new Date().toISOString();
   @observable weather = null;
-  @observable loadWeatherError = false;
+  @observable weatherError = false;
+  @observable messages = [];
 
-  @action tick = () => {};
-  @action fetchWeather = async city => {};
+  @action
+  setMessages = messages => {
+    this.messages = messages;
+  };
+
+  @action
+  fetchWeather = async city => {
+    try {
+      const response = await axios.get(
+        'https://abnormal-weather-api.herokuapp.com/cities/search',
+        {
+          params: { city }
+        }
+      );
+
+      this.weather = response.data;
+    } catch (error) {
+      this.weatherError = true;
+    }
+  };
 }
 
 export default new WeatherStore();

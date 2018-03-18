@@ -1,13 +1,13 @@
 import React from 'react';
-import axios from 'axios';
 import { Motion, spring } from 'react-motion';
+import { inject, observer } from 'mobx-react';
 
 import Nav from '../components/Nav';
 import Temperature from '../components/Temperature';
 import Time from '../components/Time';
 import Today from '../components/Today';
 import Daily from '../components/Daily';
-// import Chat from "../components/Chat";
+import Chat from '../components/Chat';
 
 import {
   Loading, // small div to wrap text when loading data
@@ -16,12 +16,11 @@ import {
   Forecast // Wrapper for when showing the Daily components
 } from '../elements/city';
 
+@inject('UiStore', 'WeatherStore')
+@observer
 export default class City extends React.Component {
   state = {
-    weather: null,
-    time: new Date().toISOString(),
-    weatherError: false,
-    showForecast: false
+    time: new Date().toISOString()
   };
 
   componentDidMount() {
@@ -31,37 +30,19 @@ export default class City extends React.Component {
       });
     }, 1000);
 
-    this.fetchWeather();
+    this.props.WeatherStore.fetchWeather(this.props.match.params.city);
   }
 
-  fetchWeather = async () => {
-    try {
-      const response = await axios.get(
-        'https://abnormal-weather-api.herokuapp.com/cities/search',
-        {
-          params: { city: this.props.match.params.city }
-        }
-      );
-
-      this.setState({
-        weather: response.data
-      });
-    } catch (error) {
-      this.setState({
-        weatherError: true
-      });
-    }
-  };
-
   render() {
-    const { weather, time, weatherError } = this.state;
+    const { time } = this.state;
+    const { weather, weatherError } = this.props.WeatherStore;
 
     if (weatherError) {
       return <Loading>Sorry, something went wrong! 🤨</Loading>;
     }
 
     {
-      if (!this.state.weather) {
+      if (!weather) {
         return <Loading>Loading...</Loading>;
       }
     }
@@ -71,13 +52,12 @@ export default class City extends React.Component {
           style={{ backgroundImage: `url('${weather.image_url}')` }}
         />
         <Nav city={weather.city} />
+        <Chat city={weather.city} />
         <Temperature
           temp={weather.current.temp}
           city={weather.city}
           toggleForecast={() => {
-            this.setState({
-              showForecast: !this.state.showForecast
-            });
+            this.props.UiStore.toggleForecast();
           }}
         />
         <Time time={time} />
@@ -86,8 +66,8 @@ export default class City extends React.Component {
         <Motion
           defaultStyle={{ x: -200, opacity: 0 }}
           style={{
-            x: spring(this.state.showForecast ? 0 : -200),
-            opacity: spring(this.state.showForecast ? 1 : 0)
+            x: spring(this.props.UiStore.showForecast ? 0 : -200),
+            opacity: spring(this.props.UiStore.showForecast ? 1 : 0)
           }}
         >
           {style => (

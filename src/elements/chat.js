@@ -1,8 +1,9 @@
-import styled, { css } from "styled-components";
-import { breakpoints } from "./settings";
+import styled, { css } from 'styled-components';
+import { breakpoints } from './settings';
 
 const ChatContainer = styled.section`
   position: absolute;
+  z-index: 100;
   left: 100vw;
   right: 0px;
   top: 0px;
@@ -60,7 +61,7 @@ const UserInput = styled.input`
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 `;
 
-const TextInput = UserInput.withComponent("textarea");
+const TextInput = UserInput.withComponent('textarea');
 
 const SendButton = styled.button`
   margin-top: 20px;
@@ -68,7 +69,7 @@ const SendButton = styled.button`
   padding-left: 20px;
   padding-right: 20px;
   border-radius: 0px;
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: 'Barlow Condensed', sans-serif;
   font-size: 1.2rem;
   border: 3px solid #ff057c;
   color: #ff057c;

@@ -1,6 +1,9 @@
 import React from 'react';
+import { TweenMax } from 'gsap';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import axios from 'axios';
 // import { inject, observer } from 'mobx-react';
+
 import {
   Container, // Wrapper (div) for all the content in this component
   Logo, // The logo image (img)
@@ -16,13 +19,52 @@ import logo from '../images/theclima.svg';
 
 export default class Home extends React.Component {
   state = {
-    searchValue: ''
+    searchValue: '',
+    nearby: []
+  };
+
+  componentDidMount() {
+    TweenMax.fromTo(
+      this.logo,
+      1,
+      { opacity: 0, scale: 0.5 },
+      { opacity: 1, scale: 1 }
+    );
+
+    this.loadNearby();
+    // this.fetchNearbyCities(43.644, -79.397);
+  }
+
+  loadNearby = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+
+        this.fetchNearbyCities(latitude, longitude);
+      });
+    }
+  };
+
+  fetchNearbyCities = async (latitude, longitude) => {
+    const response = await axios.get(
+      'https://abnormal-weather-api.herokuapp.com/cities/nearby',
+      { params: { latitude, longitude } }
+    );
+
+    this.setState({
+      nearby: response.data
+    });
   };
 
   render() {
     return (
       <Container>
-        <Logo src={logo} />
+        <Logo
+          innerRef={logo => {
+            this.logo = logo;
+          }}
+          src={logo}
+        />
         <Form>
           <Label>Search City...</Label>
           <PlacesAutocomplete
@@ -40,6 +82,14 @@ export default class Home extends React.Component {
             }}
           />
         </Form>
+
+        <NearbyCities>
+          {this.state.nearby.map(city => (
+            <NearbyCity key={city.id}>
+              <NearbyLink to={`/${city.name}`}>{city.name}</NearbyLink>
+            </NearbyCity>
+          ))}
+        </NearbyCities>
       </Container>
     );
   }
